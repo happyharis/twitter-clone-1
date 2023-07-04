@@ -1,11 +1,30 @@
+import axios from "axios";
 import { useState } from "react";
 import { Button, Col, Form, Image, Modal, Row } from "react-bootstrap";
 
 export default function AuthPage() {
 	const loginImage = "https://sig1.co/img-twitter-1";
+	const url =
+		"https://auth-back-end-ngenchangwang.sigma-school-full-stack.repl.co";
 	const [show, setShow] = useState(false);
 	const handleClose = () => setShow(false);
 	const handleShow = () => setShow(true);
+	const [username, setUsername] = useState("");
+	const [password, setPassword] = useState("");
+
+	const handleSignUp = async (e) => {
+		e.preventDefault();
+
+		try {
+			const res = await axios.post(`${url}/signup`, {
+				username,
+				password,
+			});
+			console.log(res.data);
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
 	return (
 		<Row>
@@ -47,16 +66,22 @@ export default function AuthPage() {
 					</Button>
 				</Col>
 				<Modal show={show} onHide={handleClose} centered>
-					<Modal.Body className="d-grid gap-2 px-5">
+					<Modal.Body>
 						<h2 className="mb-4" style={{ fontWeight: "bold" }}>
 							Create Your Account
 						</h2>
-						<Form>
+						<Form
+							className="d-grid gap-2 px-5"
+							onSubmit={handleSignUp}
+						>
 							<Form.Group
 								className="mb-3"
 								controlId="formBasicEmail"
 							>
 								<Form.Control
+									onChange={(e) =>
+										setUsername(e.target.value)
+									}
 									type="email"
 									placeholder="Enter E-mail"
 								/>
@@ -66,23 +91,29 @@ export default function AuthPage() {
 								controlId="formBasicPassword"
 							>
 								<Form.Control
+									onChange={(e) =>
+										setPassword(e.target.value)
+									}
 									type="password"
 									placeholder="Enter Password"
 								/>
 							</Form.Group>
+							<p style={{ fontSize: "12px" }}>
+								By signing up, you agree to the Terms of Service
+								and Privacy Policy, including Cookie Use.
+								SigmaTweets may use your contact information,
+								including your e-mail address and phone number
+								for purposes outlined in our Privacy Policy,
+								like keeping your account secure and
+								personalising our services, including ads. Learn
+								more. Others will be able to find you by e-mail
+								or phone number, when provided, unless you
+								choose otherwise here.
+							</p>
+							<Button className="rounded-pill" type="submit">
+								Sign Up
+							</Button>
 						</Form>
-						<p style={{ fontSize: "12px" }}>
-							By signing up, you agree to the Terms of Service and
-							Privacy Policy, including Cookie Use. SigmaTweets
-							may use your contact information, including your
-							e-mail address and phone number for purposes
-							outlined in our Privacy Policy, like keeping your
-							account secure and personalising our services,
-							including ads. Learn more. Others will be able to
-							find you by e-mail or phone number, when provided,
-							unless you choose otherwise here.
-						</p>
-						<Button className="rounded-pill">Sign Up</Button>
 					</Modal.Body>
 				</Modal>
 			</Col>
