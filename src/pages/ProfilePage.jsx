@@ -9,17 +9,10 @@ export default function ProfilePage() {
 	const [authToken, setAuthToken] = useLocalStorage("authToken", "");
 	const navigate = useNavigate();
 
-	// Check for authToken immediately upon component mount and whenever authToken changes
 	useEffect(() => {
-		if (!authToken) {
-			navigate("/login"); // Redirect to login if no authToken is present
-		}
+		if (!authToken) navigate("/login");
 	}, [authToken, navigate]);
-
-	const handleLogout = () => {
-		setAuthToken(""); // Clear token from localStorage
-	};
-
+	const handleLogout = () => setAuthToken("");
 	return (
 		<>
 			<Container>

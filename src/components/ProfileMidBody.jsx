@@ -1,8 +1,8 @@
-import jwtDecode from "jwt-decode";
+import jwt_decode from "jwt-decode";
 import { useEffect } from "react";
 import { Button, Col, Image, Nav, Row, Spinner } from "react-bootstrap";
-import ProfilePostCard from "./ProfilePostCard";
 import { useDispatch, useSelector } from "react-redux";
+import ProfilePostCard from "./ProfilePostCard";
 import { fetchPostsByUser } from "../features/posts/postsSlice";
 
 export default function ProfileMidBody() {
@@ -17,9 +17,8 @@ export default function ProfileMidBody() {
 
 	useEffect(() => {
 		const token = localStorage.getItem("authToken");
-
 		if (token) {
-			const decodedToken = jwtDecode(token);
+			const decodedToken = jwt_decode(token);
 			const userId = decodedToken.id;
 			dispatch(fetchPostsByUser(userId));
 		}
@@ -71,7 +70,6 @@ export default function ProfileMidBody() {
 			<p>
 				<strong>271</strong> Following <strong>610</strong> Followers
 			</p>
-
 			<Nav variant="underline" defaultActiveKey="/home" justify>
 				<Nav.Item>
 					<Nav.Link eventKey="/home">Tweets</Nav.Link>

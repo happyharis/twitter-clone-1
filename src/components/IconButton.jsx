@@ -17,7 +17,6 @@ export default function IconButton({
 		margin = `light rounded-pill`;
 	}
 	const iconMargin = text ? " me-3" : " ";
-
 	return (
 		<Button variant={margin} onClick={onClick}>
 			<i

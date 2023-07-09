@@ -3,7 +3,7 @@ import axios from "axios";
 import jwtDecode from "jwt-decode";
 
 const BASE_URL =
-	"https://twitter-api-ngenchangwang.sigma-school-full-stack.repl.co";
+	"https://twitter-api-sigmaschooltech.sigma-school-full-stack.repl.co";
 
 // Async thunk for fetching a user's posts
 export const fetchPostsByUser = createAsyncThunk(
