@@ -1,5 +1,6 @@
 import {
 	GoogleAuthProvider,
+	OAuthProvider,
 	createUserWithEmailAndPassword,
 	getAuth,
 	signInWithEmailAndPassword,
@@ -21,6 +22,7 @@ export default function AuthPage() {
 	const navigate = useNavigate();
 	const { currentUser } = useContext(AuthContext);
 	const provider = new GoogleAuthProvider();
+	const appleProvider = new OAuthProvider("apple.com");
 	const [errorMessage, setErrorMessage] = useState("");
 
 	if (currentUser) navigate("/profile");
@@ -60,6 +62,16 @@ export default function AuthPage() {
 		}
 	};
 
+	const handleAppleLogin = async (e) => {
+		e.preventDefault();
+		try {
+			await signInWithPopup(auth, appleProvider);
+		} catch (error) {
+			console.error(error);
+			setErrorMessage("Failed to sign in with Apple. Please try again.");
+		}
+	};
+
 	const handleClose = () => {
 		setModalShow(null);
 		setErrorMessage(""); // Reset the error message when closing the modal
@@ -90,7 +102,11 @@ export default function AuthPage() {
 					>
 						<i className="bi bi-google"></i> Sign up with Google
 					</Button>
-					<Button className="rounded-pill" variant="outline-dark">
+					<Button
+						className="rounded-pill"
+						variant="outline-dark"
+						onClick={handleAppleLogin}
+					>
 						<i className="bi bi-apple"></i> Sign up with Apple
 					</Button>
 					<p style={{ textAlign: "center" }}>or</p>
