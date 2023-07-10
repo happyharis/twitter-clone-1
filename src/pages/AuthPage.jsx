@@ -1,6 +1,7 @@
 import {
 	GoogleAuthProvider,
 	OAuthProvider,
+	FacebookAuthProvider,
 	createUserWithEmailAndPassword,
 	getAuth,
 	signInWithEmailAndPassword,
@@ -23,6 +24,7 @@ export default function AuthPage() {
 	const { currentUser } = useContext(AuthContext);
 	const provider = new GoogleAuthProvider();
 	const appleProvider = new OAuthProvider("apple.com");
+	const facebookProvider = new FacebookAuthProvider();
 	const [errorMessage, setErrorMessage] = useState("");
 
 	if (currentUser) navigate("/profile");
@@ -72,6 +74,18 @@ export default function AuthPage() {
 		}
 	};
 
+	const handleFacebookLogin = async (e) => {
+		e.preventDefault();
+		try {
+			await signInWithPopup(auth, facebookProvider);
+		} catch (error) {
+			console.error(error);
+			setErrorMessage(
+				"Failed to sign in with Facebook. Please try again."
+			);
+		}
+	};
+
 	const handleClose = () => {
 		setModalShow(null);
 		setErrorMessage(""); // Reset the error message when closing the modal
@@ -108,6 +122,13 @@ export default function AuthPage() {
 						onClick={handleAppleLogin}
 					>
 						<i className="bi bi-apple"></i> Sign up with Apple
+					</Button>
+					<Button
+						className="rounded-pill"
+						variant="outline-dark"
+						onClick={handleFacebookLogin}
+					>
+						<i className="bi bi-facebook"></i> Sign up with Facebook
 					</Button>
 					<p style={{ textAlign: "center" }}>or</p>
 					<Button className="rounded-pill" onClick={handleShowSignUp}>
