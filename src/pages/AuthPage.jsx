@@ -6,13 +6,12 @@ import {
 	signInWithPopup,
 } from "firebase/auth";
 import { useContext, useState } from "react";
-import { Button, Col, Form, Image, Modal, Row } from "react-bootstrap";
+import { Button, Col, Form, Image, Modal, Row, Alert } from "react-bootstrap";
 import { AuthContext } from "../components/AuthProvider";
 import { useNavigate } from "react-router-dom";
 
 export default function AuthPage() {
 	const loginImage = "https://sig1.co/img-twitter-1";
-	// values: null (no modal show), "login", "signup"
 	const [modalShow, setModalShow] = useState(null);
 	const handleShowSignUp = () => setModalShow("signup");
 	const handleShowLogin = () => setModalShow("login");
@@ -22,6 +21,7 @@ export default function AuthPage() {
 	const navigate = useNavigate();
 	const { currentUser } = useContext(AuthContext);
 	const provider = new GoogleAuthProvider();
+	const [errorMessage, setErrorMessage] = useState("");
 
 	if (currentUser) navigate("/profile");
 
@@ -36,26 +36,34 @@ export default function AuthPage() {
 			console.log(res.user);
 		} catch (error) {
 			console.error(error);
+			setErrorMessage("Failed to create an account. Please try again.");
 		}
 	};
+
 	const handleLogin = async (e) => {
 		e.preventDefault();
 		try {
 			await signInWithEmailAndPassword(auth, username, password);
 		} catch (error) {
 			console.error(error);
+			setErrorMessage("Invalid username or password.");
 		}
 	};
+
 	const handleGoogleLogin = async (e) => {
 		e.preventDefault();
 		try {
 			await signInWithPopup(auth, provider);
 		} catch (error) {
 			console.error(error);
+			setErrorMessage("Failed to sign in with Google. Please try again.");
 		}
 	};
 
-	const handleClose = () => setModalShow(null);
+	const handleClose = () => {
+		setModalShow(null);
+		setErrorMessage(""); // Reset the error message when closing the modal
+	};
 
 	return (
 		<Row>
@@ -160,9 +168,13 @@ export default function AuthPage() {
 								or phone number, when provided, unless you
 								choose otherwise here.
 							</p>
-							<Button className="rounded-pill" type="submit">
+							<Button className="rounded-pill mb-2" type="submit">
 								{modalShow === "signup" ? "Sign up" : "Log in"}
 							</Button>
+							{/* Display error message */}
+							{errorMessage && (
+								<Alert variant="danger">{errorMessage}</Alert>
+							)}
 						</Form>
 					</Modal.Body>
 				</Modal>
