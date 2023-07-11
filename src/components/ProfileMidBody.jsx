@@ -1,9 +1,9 @@
-import jwt_decode from "jwt-decode";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { Button, Col, Image, Nav, Row, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import ProfilePostCard from "./ProfilePostCard";
 import { fetchPostsByUser } from "../features/posts/postsSlice";
+import { AuthContext } from "./AuthProvider";
+import ProfilePostCard from "./ProfilePostCard";
 
 export default function ProfileMidBody() {
 	const url =
@@ -14,15 +14,11 @@ export default function ProfileMidBody() {
 	const dispatch = useDispatch();
 	const posts = useSelector((state) => state.posts.posts);
 	const loading = useSelector((state) => state.posts.loading);
+	const { currentUser } = useContext(AuthContext);
 
 	useEffect(() => {
-		const token = localStorage.getItem("authToken");
-		if (token) {
-			const decodedToken = jwt_decode(token);
-			const userId = decodedToken.id;
-			dispatch(fetchPostsByUser(userId));
-		}
-	}, [dispatch]);
+		dispatch(fetchPostsByUser(currentUser.uid));
+	}, [dispatch, currentUser]);
 
 	return (
 		<Col
@@ -32,18 +28,18 @@ export default function ProfileMidBody() {
 		>
 			<Image src={url} fluid />
 			<br />
+
 			<Image
 				src={pic}
 				roundedCircle
 				style={{
-					width: 150,
 					position: "absolute",
 					top: "140px",
-					border: "4px solid #F8F9FA",
 					marginLeft: 15,
+					width: 150,
+					border: "4px solid #F8F9FA",
 				}}
 			/>
-
 			<Row className="justify-content-end">
 				<Col xs="auto">
 					<Button
@@ -54,7 +50,6 @@ export default function ProfileMidBody() {
 					</Button>
 				</Col>
 			</Row>
-
 			<p
 				className="mt-5"
 				style={{ margin: 0, fontWeight: "bold", fontSize: "15px" }}
@@ -62,10 +57,7 @@ export default function ProfileMidBody() {
 				Haris
 			</p>
 			<p style={{ marginBottom: "2px" }}>@haris.samingan</p>
-			<p>
-				I help people switch careers to be a software developer at
-				sigmaschool.co
-			</p>
+			<p>I help people</p>
 			<p>Entrepreneur</p>
 			<p>
 				<strong>271</strong> Following <strong>610</strong> Followers
@@ -75,16 +67,16 @@ export default function ProfileMidBody() {
 					<Nav.Link eventKey="/home">Tweets</Nav.Link>
 				</Nav.Item>
 				<Nav.Item>
-					<Nav.Link eventKey="link-1">Replies</Nav.Link>
+					<Nav.Link eventKey="replies">Replies</Nav.Link>
 				</Nav.Item>
 				<Nav.Item>
-					<Nav.Link eventKey="link-2">Highlights</Nav.Link>
+					<Nav.Link eventKey="highlights">Highlights</Nav.Link>
 				</Nav.Item>
 				<Nav.Item>
-					<Nav.Link eventKey="link-3">Media</Nav.Link>
+					<Nav.Link eventKey="media">Media</Nav.Link>
 				</Nav.Item>
 				<Nav.Item>
-					<Nav.Link eventKey="link-4">Likes</Nav.Link>
+					<Nav.Link eventKey="likes">Likes</Nav.Link>
 				</Nav.Item>
 			</Nav>
 			{loading && (
@@ -95,11 +87,7 @@ export default function ProfileMidBody() {
 				/>
 			)}
 			{posts.map((post) => (
-				<ProfilePostCard
-					key={post.id}
-					content={post.content}
-					postId={post.id}
-				/>
+				<ProfilePostCard key={post.id} post={post} />
 			))}
 		</Col>
 	);

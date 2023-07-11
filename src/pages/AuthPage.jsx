@@ -1,7 +1,5 @@
 import {
 	GoogleAuthProvider,
-	OAuthProvider,
-	FacebookAuthProvider,
 	createUserWithEmailAndPassword,
 	getAuth,
 	signInWithEmailAndPassword,
@@ -23,8 +21,6 @@ export default function AuthPage() {
 	const navigate = useNavigate();
 	const { currentUser } = useContext(AuthContext);
 	const provider = new GoogleAuthProvider();
-	const appleProvider = new OAuthProvider("apple.com");
-	const facebookProvider = new FacebookAuthProvider();
 	const [errorMessage, setErrorMessage] = useState("");
 
 	if (currentUser) navigate("/profile");
@@ -50,7 +46,7 @@ export default function AuthPage() {
 			await signInWithEmailAndPassword(auth, username, password);
 		} catch (error) {
 			console.error(error);
-			setErrorMessage("Invalid username or password.");
+			setErrorMessage("Invalid username or password!");
 		}
 	};
 
@@ -61,28 +57,6 @@ export default function AuthPage() {
 		} catch (error) {
 			console.error(error);
 			setErrorMessage("Failed to sign in with Google. Please try again.");
-		}
-	};
-
-	const handleAppleLogin = async (e) => {
-		e.preventDefault();
-		try {
-			await signInWithPopup(auth, appleProvider);
-		} catch (error) {
-			console.error(error);
-			setErrorMessage("Failed to sign in with Apple. Please try again.");
-		}
-	};
-
-	const handleFacebookLogin = async (e) => {
-		e.preventDefault();
-		try {
-			await signInWithPopup(auth, facebookProvider);
-		} catch (error) {
-			console.error(error);
-			setErrorMessage(
-				"Failed to sign in with Facebook. Please try again."
-			);
 		}
 	};
 
@@ -106,7 +80,7 @@ export default function AuthPage() {
 					Happening Now
 				</p>
 				<h2 className="my-5" style={{ fontSize: 31 }}>
-					Join Twitter today.
+					Join Twitter Today
 				</h2>
 				<Col sm={5} className="d-grid gap-2">
 					<Button
@@ -114,27 +88,19 @@ export default function AuthPage() {
 						variant="outline-dark"
 						onClick={handleGoogleLogin}
 					>
-						<i className="bi bi-google"></i> Sign up with Google
+						<i className="bi bi-google"></i> Sign Up with Google
 					</Button>
-					<Button
-						className="rounded-pill"
-						variant="outline-dark"
-						onClick={handleAppleLogin}
-					>
-						<i className="bi bi-apple"></i> Sign up with Apple
-					</Button>
-					<Button
-						className="rounded-pill"
-						variant="outline-dark"
-						onClick={handleFacebookLogin}
-					>
-						<i className="bi bi-facebook"></i> Sign up with Facebook
+					<Button className="rounded-pill" variant="outline-dark">
+						<i className="bi bi-apple"></i> Sign Up with Apple
 					</Button>
 					<p style={{ textAlign: "center" }}>or</p>
 					<Button className="rounded-pill" onClick={handleShowSignUp}>
 						Create an account
 					</Button>
-					<p style={{ fontSize: "12px" }}> Agree to terms</p>
+					<p style={{ fontSize: "12px" }}>
+						{" "}
+						Agree to terms and conditions
+					</p>
 					<p className="mt-5" style={{ fontWeight: "bold" }}>
 						Already have an account?
 					</p>
@@ -143,7 +109,7 @@ export default function AuthPage() {
 						variant="outline-primary"
 						onClick={handleShowLogin}
 					>
-						Sign in
+						Sign In
 					</Button>
 				</Col>
 				<Modal
@@ -176,7 +142,7 @@ export default function AuthPage() {
 										setUsername(e.target.value)
 									}
 									type="email"
-									placeholder="Enter email"
+									placeholder="Enter E-mail"
 								/>
 							</Form.Group>
 
@@ -189,7 +155,7 @@ export default function AuthPage() {
 										setPassword(e.target.value)
 									}
 									type="password"
-									placeholder="Password"
+									placeholder="Enter Password"
 								/>
 							</Form.Group>
 
@@ -206,7 +172,7 @@ export default function AuthPage() {
 								choose otherwise here.
 							</p>
 							<Button className="rounded-pill mb-2" type="submit">
-								{modalShow === "signup" ? "Sign up" : "Log in"}
+								{modalShow === "signup" ? "Sign Up" : "Log In"}
 							</Button>
 							{/* Display error message */}
 							{errorMessage && (
