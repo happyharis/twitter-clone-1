@@ -12,6 +12,7 @@ export default function ProfilePage() {
 	const { currentUser } = useContext(AuthContext);
 
 	if (!currentUser) navigate("/login");
+
 	const handleLogout = () => auth.signOut();
 	return (
 		<>
