@@ -18,10 +18,24 @@ export const deletePost = createAsyncThunk(
 			// Reference to the post
 			const postRef = doc(db, `users/${userId}/posts/${postId}`);
 			console.log(`users/${userId}/posts/${postId}`);
-			// Delete the post
-			await deleteDoc(postRef);
-			// Return the ID of the deleted post
-			return postId;
+			// Fetch the post data
+			const postSnap = await getDoc(postRef);
+
+			if (postSnap.exists()) {
+				// Open a confirmation modal before deleting the tweet
+				const confirmed = window.confirm(
+					"Are you sure you want to delete this tweet?"
+				);
+
+				if (confirmed) {
+					// Delete the post
+					await deleteDoc(postRef);
+					// Return the ID of the deleted post
+					return postId;
+				}
+			} else {
+				throw new Error("Post does not exist");
+			}
 		} catch (error) {
 			console.error(error);
 			throw error;
